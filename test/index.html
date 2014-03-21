@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Mocha Spec Runner</title>
+    <link rel="stylesheet" href="bower_components/mocha/mocha.css">
+</head>
+<body>
+    <div id="mocha"></div>
+    <script src="bower_components/mocha/mocha.js"></script>
+    <script>mocha.setup('bdd')</script>
+    <script src="bower_components/chai/chai.js"></script>
+    <script>
+
+        var assert = chai.assert;
+        var expect = chai.expect;
+        var should = chai.should();
+
+        var Assertion = chai.Assertion;
+
+        var EPSILON = 0.00001;
+
+        Assertion.addMethod('toBeEqualish2', function (m) {
+          var obj = this._obj,
+            actual = [],
+            expected = []
+
+          for (var i = 0; i < 16; i++) {
+            actual.push(obj[i]);
+            expected.push(m[i]);
+          }
+
+          new Assertion(actual).to.be.eql(expected);
+
+        });
+
+        Assertion.addMethod('toBeEqualish', function (arr) {
+          var obj = this._obj,
+            actual = [],
+            expected = [],
+            equal = true;
+
+          if (obj.length !== arr.length) {
+            equal = false;
+          } else {
+            for (var i = 0; i < arr.length; i++) {
+              actual.push(obj[i]);
+              expected.push(arr[i]);
+              if (Math.abs(actual[i] - expected[i]) >= EPSILON) {
+                equal = false;
+              }
+            }
+          }
+
+          this.assert(
+            equal,
+            "expected [" + actual + "] to be [" + expected + "]",
+            "expected [" + actual + "] to not be [" + expected + "]"
+          );
+
+        });
+    </script>
+
+    <!-- include source files here... -->
+    <script src="scripts/matrix4.js"></script>
+    <script src="scripts/vector3.js"></script>
+    <script src="scripts/Vec3.js"></script>
+
+    <!-- include spec files here... -->
+    <script src="spec/matrix4.js"></script>
+    <script src="spec/vector3.js"></script>
+    <script src="spec/Vec3.js"></script>
+
+    <script>mocha.run()</script>
+</body>
+</html>
